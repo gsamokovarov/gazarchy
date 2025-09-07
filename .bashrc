@@ -61,10 +61,10 @@ alias gl='git short'
 alias gs='git status'
 alias ga='git commit --amend'
 
-alias 'g['='git ['
-alias 'g]'='git ]'
-alias 'g+'='git +'
-alias 'g-'='git--'
+alias g[='git push'
+alias g]='git pull'
+alias g+='git add'
+alias g-='git rm'
 
 # Bundle shortcuts.
 alias b='bundle'
