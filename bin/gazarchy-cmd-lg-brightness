@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Usage: gazarchy-cmd-lg-brightness +10
+#        gazarchy-cmd-lg-brightness -10
+#
+# Requires ddcutil and i2c-dev kernel modules:
+#
+# pacman -S ddcutil
+# sudo modprobe i2c-dev
+
+
+if [[ $# -ne 1 || ! $1 =~ ^[\+\-][0-9]+$ ]]; then
+  echo "Usage: $0 [+|-][value]"
+  exit 1
+fi
+
+change=$1
+
+# Detect the i2c bus number for the first valid LG UltraFine display
+bus=$(ddcutil detect 2>/dev/null | awk '/Display [0-9]+/{flag=1} flag && /I2C bus/{print $3; exit}' | sed 's|/dev/i2c-||')
+
+if [ -z "$bus" ]; then
+  echo "No valid LG UltraFine monitor found."
+  exit 2
+fi
+
+# Get current brightness value (VCP code 10)
+current_brightness=$(ddcutil --bus "$bus" getvcp 10 2>/dev/null | grep -oP 'current value = \s+\d+' | grep -oP '\d+')
+
+if [ -z "$current_brightness" ]; then
+  echo "Failed to get current brightness."
+  exit 3
+fi
+
+# Calculate new brightness value
+new_brightness=$((current_brightness + change))
+
+# Clamp brightness value between 0 and 100
+if [ "$new_brightness" -gt 100 ]; then
+  new_brightness=100
+elif [ "$new_brightness" -lt 0 ]; then
+  new_brightness=0
+fi
+
+# Set new brightness
+ddcutil --bus "$bus" setvcp 10 "$new_brightness" 2>/dev/null
+
+echo "Brightness changed from $current_brightness to $new_brightness"
