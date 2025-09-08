@@ -23,12 +23,12 @@ git() {
 # Rage quit everywhere.
 alias Q=exit
 
-# Custom old-man setup
-alias v="nvim -u ~/.oldvimrc -p"
-alias vim="nvim -u ~/.oldvimrc -p"
-
 # Don't even bother with old vi.
 alias vi=nvim
+
+# All them vimkeys
+alias v=nvim
+alias vim=nvim
 
 # Some systems may not be happy with the $TERM of screen-256colors, so be sane.
 alias ssh="TERM=xterm ssh"
