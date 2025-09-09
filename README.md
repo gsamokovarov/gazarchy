@@ -11,7 +11,7 @@
 
 ```
 
-Gazarchy is my configuration for (Omarchy)[https://omarchy.org]. It's Arch,
+Gazarchy is my configuration for [Omarchy](https://omarchy.org). It's Arch,
 btw, and it's the best computer name.
 
 ## Install
