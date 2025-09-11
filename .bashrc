@@ -16,7 +16,13 @@ git() {
   elif [ $# -eq 0 ]; then
     command git status
   else
-    command git $*
+    case "$1" in
+      "]") command git push ;;
+      "[") command git pull ;;
+      "+") command git add ;;
+      "-") command git rm ;;
+      *) command git $* ;;
+    esac
   fi
 }
 
