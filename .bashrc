@@ -17,10 +17,10 @@ git() {
     command git status
   else
     case "$1" in
-      "]") command git push ;;
-      "[") command git pull ;;
-      "+") command git add ;;
-      "-") command git rm ;;
+      ]) command git push ;;
+      [) command git pull ;;
+      +) command git add ;;
+      -) command git rm ;;
       *) command git $* ;;
     esac
   fi
