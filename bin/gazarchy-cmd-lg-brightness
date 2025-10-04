@@ -46,7 +46,7 @@ ddcutil --bus "$bus" setvcp 10 "$new_brightness" 2>/dev/null
 
 # Send OSD notification
 swayosd-client \
-  --monitor \"$(hyprctl monitors -j | jq -r '.[] | select(.focused == true).name')\" \
+  --monitor $(hyprctl monitors -j | jq -r '.[] | select(.focused == true).name') \
   --custom-progress $(awk "BEGIN {printf \"%.2f\", $new_brightness/100}") --custom-progress-text="$new_brightness%" \
   --custom-icon=video-display
 
