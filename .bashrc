@@ -18,11 +18,11 @@ git() {
     command git status
   else
     case "$1" in
-      ]) command git push ;;
-      [) command git pull ;;
-      +) command git add ;;
-      -) command git rm ;;
-      *) command git $* ;;
+      ]) shift; command git push "$@" ;;
+      [) shift; command git pull "$@";;
+      +) shift; command git add "$@";;
+      -) shift; command git rm "$@";;
+      *) shift; command git "$@" ;;
     esac
   fi
 }
