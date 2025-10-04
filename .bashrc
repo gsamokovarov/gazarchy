@@ -22,7 +22,7 @@ git() {
       [) shift; command git pull "$@";;
       +) shift; command git add "$@";;
       -) shift; command git rm "$@";;
-      *) shift; command git "$@" ;;
+      *) command git "$@" ;;
     esac
   fi
 }
