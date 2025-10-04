@@ -8,7 +8,6 @@
 # pacman -S ddcutil
 # sudo modprobe i2c-dev
 
-
 if [[ $# -ne 1 || ! $1 =~ ^[\+\-][0-9]+$ ]]; then
   echo "Usage: $0 [+|-][value]"
   exit 1
@@ -44,5 +43,11 @@ fi
 
 # Set new brightness
 ddcutil --bus "$bus" setvcp 10 "$new_brightness" 2>/dev/null
+
+# Send OSD notification
+swayosd-client \
+  --monitor \"$(hyprctl monitors -j | jq -r '.[] | select(.focused == true).name')\" \
+  --custom-progress $(awk "BEGIN {printf \"%.2f\", $new_brightness/100}") --custom-progress-text="$new_brightness%" \
+  --custom-icon=video-display
 
 echo "Brightness changed from $current_brightness to $new_brightness"
