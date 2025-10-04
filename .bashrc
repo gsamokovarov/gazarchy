@@ -1,8 +1,7 @@
 source ~/.local/share/omarchy/default/bash/rc
 
 # Ensure gazarchy and other custom utlities from ~/bin are exported.
-# Use neovim version from bob as I'm hitting https://github.com/neovim/neovim/issues/33067.
-export PATH=$PATH:~/bin:~/.local/share/bob/nvim-bin
+export PATH=$PATH:~/bin
 
 # Jump is better!
 eval "$(jump shell bash)"
