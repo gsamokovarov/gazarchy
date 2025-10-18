@@ -1,10 +1,15 @@
 source ~/.local/share/omarchy/default/bash/rc
 
-# Ensure gazarchy and other custom utlities from ~/bin are exported.
+# Ensure gazarchy and other custom utilities from ~/bin are exported.
 export PATH=$PATH:~/bin:~/.volta/bin
 
 # Jump is better!
 eval "$(jump shell bash)"
+
+# Test jump's incoming based mode.
+function z() {
+  j "$(command git rev-parse --show-toplevel)" $@
+}
 
 # Use git with a twist -- if the first argument is an existing branch
 # then switch to it. If no args are given, run git status.
