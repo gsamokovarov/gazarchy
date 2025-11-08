@@ -4,12 +4,7 @@ source ~/.local/share/omarchy/default/bash/rc
 export PATH=~/bin:~/.local/bin:~/.volta/bin:$PATH
 
 # Jump is better!
-eval "$(jump shell bash)"
-
-# Test jump's incoming based mode.
-function z() {
-  j "$(command git rev-parse --show-toplevel)" $@
-}
+eval "$(jump shell bash --based-bind=z)"
 
 # Use git with a twist -- if the first argument is an existing branch
 # then switch to it. If no args are given, run git status.
