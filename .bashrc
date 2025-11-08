@@ -85,3 +85,6 @@ alias brat='bundle exec rails test'
 alias bo='bundle open'
 alias bi='bundle install'
 alias bam='bundle exec middleman'
+
+# Hivemind shortcuts
+alias hive=hivemind
