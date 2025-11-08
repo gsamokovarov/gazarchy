@@ -17,7 +17,7 @@ git() {
   local target_branch=$1
 
   if [ $# -eq 1 ] && [ -e "$(command git rev-parse --git-dir 2>/dev/null)/refs/heads/$target_branch" ]; then
-    command git checkout $target_branch
+    command git switch $target_branch
   elif [ $# -eq 0 ]; then
     command git status
   else
