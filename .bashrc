@@ -1,7 +1,7 @@
 source ~/.local/share/omarchy/default/bash/rc
 
 # Ensure gazarchy and other custom utilities from ~/bin are exported.
-export PATH=$PATH:~/bin:~/.local/bin:~/.volta/bin
+export PATH=~/bin:~/.local/bin:~/.volta/bin:$PATH
 
 # Jump is better!
 eval "$(jump shell bash)"
