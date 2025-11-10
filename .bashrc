@@ -26,6 +26,9 @@ git() {
   fi
 }
 
+# I'm a jump guy, no zoxide pls.
+unalias cd
+
 # Rage quit everywhere.
 alias Q=exit
 
