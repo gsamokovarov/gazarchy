@@ -100,7 +100,7 @@ next-theme() {
     fi
   done
 
-  omarchy-theme-set "$next" >/dev/null
+  omarchy-theme-set "$next" >/dev/null 2>&1
 }
 
 light() { next-theme rose-pine flexoki-light; }
