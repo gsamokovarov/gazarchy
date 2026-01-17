@@ -86,3 +86,22 @@ alias bam='bundle exec middleman'
 
 # Hivemind shortcuts
 alias hive=hivemind
+
+# Cycle through a list of themes, setting the next one after current.
+next-theme() {
+  local themes=("$@")
+  local current=$(cat ~/.config/omarchy/current/theme.name 2>/dev/null)
+  local next=${themes[0]}
+
+  for i in "${!themes[@]}"; do
+    if [[ "${themes[$i]}" == "$current" ]]; then
+      next=${themes[$(( (i + 1) % ${#themes[@]} ))]}
+      break
+    fi
+  done
+
+  omarchy-theme-set "$next" >/dev/null
+}
+
+light() { next-theme rose-pine flexoki-light; }
+dark() { next-theme gruvbox ristretto matte-black; }
