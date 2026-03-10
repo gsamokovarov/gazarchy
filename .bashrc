@@ -108,3 +108,5 @@ next-theme() {
 
 light() { next-theme rose-pine flexoki-light; }
 dark() { next-theme gruvbox ristretto matte-black; }
+
+wip() { git add -u && git commit --no-verify -m "WIP"; }
