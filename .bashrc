@@ -87,6 +87,9 @@ alias bam='bundle exec middleman'
 # Hivemind shortcuts
 alias hive=hivemind
 
+# YOLO!!!
+alias yolo "claude --dangerously-skip-permissions --chrome"
+
 # Cycle through a list of themes, setting the next one after current.
 next-theme() {
   local themes=("$@")
