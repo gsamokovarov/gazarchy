@@ -88,7 +88,7 @@ alias bam='bundle exec middleman'
 alias hive=hivemind
 
 # YOLO!!!
-alias yolo "claude --dangerously-skip-permissions --chrome"
+alias yolo="claude --dangerously-skip-permissions --chrome"
 
 # Cycle through a list of themes, setting the next one after current.
 next-theme() {
@@ -107,6 +107,6 @@ next-theme() {
 }
 
 light() { next-theme rose-pine flexoki-light; }
-dark() { next-theme gruvbox ristretto matte-black; }
+dark() { next-theme gruvbox matte-black; }
 
 wip() { git add -u && git commit --no-verify -m "WIP"; }
