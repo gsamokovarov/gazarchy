@@ -17,3 +17,6 @@ shell-integration = none
 # Keyboard bindings
 keybind = f11=toggle_fullscreen
 keybind = shift+enter=text:\x1b\r
+
+# Fix general slowness on hyprland (https://github.com/ghostty-org/ghostty/discussions/3224)
+async-backend = epoll
