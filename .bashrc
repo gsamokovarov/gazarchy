@@ -1,4 +1,4 @@
-source ~/.local/share/omarchy/default/bash/rc
+source /usr/share/omarchy/default/bashrc
 
 # Ensure gazarchy and other custom utilities from ~/bin are exported.
 export PATH=~/bin:~/.local/bin:~/.volta/bin:$PATH
