@@ -1,27 +1,6 @@
-# Dynamic theme colors
-config-file = ?"~/.config/omarchy/current/theme/ghostty.conf"
-
-# Font
-font-family = "JetBrainsMono Nerd Font"
-font-style = Regular
-font-size = 10
-
-# Window
-window-padding-x = 14
-window-padding-y = 14
-confirm-close-surface=false
-resize-overlay = never
-
-shell-integration = none
-
-# Keyboard bindings
-keybind = f11=toggle_fullscreen
-keybind = shift+enter=text:\x1b\r
-
-# Clipboard over primary selection, so Omarchy's universal copy/paste
-# (SUPER+C/V -> CTRL/SHIFT+Insert) reaches herdr and other TUIs
-keybind = shift+insert=paste_from_clipboard
-keybind = control+insert=copy_to_clipboard
-
-# Fix general slowness on hyprland (https://github.com/ghostty-org/ghostty/discussions/3224)
-async-backend = epoll
+# Inherit the Omarchy base ghostty config, then layer the gazarchy overrides
+# on top. Ghostty loads config-file includes after this file in order, so the
+# overrides win over the base. The base's own nested include (the current
+# theme colors) queues after both, letting the active theme paint last.
+config-file = /usr/share/omarchy/config/ghostty/config
+config-file = gazarchy.conf
