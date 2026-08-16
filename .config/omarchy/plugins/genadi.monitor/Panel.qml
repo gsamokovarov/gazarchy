@@ -604,7 +604,11 @@ Panel {
 
         Column {
           id: panelColumn
-          width: scrollArea.availableWidth
+          // Inset by a pixel per side: flush at x=0 a row's 1px border lands
+          // on the ScrollView clip edge and vanishes under fractional monitor
+          // scales (seen on the scale pills and the hovered slider rows).
+          x: 1
+          width: scrollArea.availableWidth - 2
           spacing: Style.space(14)
 
           // ---------- Hero: display icon · title/status ----------
@@ -845,11 +849,7 @@ Panel {
 
             Grid {
               id: scaleRow
-              // Inset by a pixel: flush at x=0 the first pill's 1px border
-              // lands on the ScrollView clip edge and vanishes under
-              // fractional monitor scales.
-              x: 1
-              width: parent.width - 2
+              width: parent.width
               columns: root.scaleValues.length
               spacing: Style.spacing.xs
 
