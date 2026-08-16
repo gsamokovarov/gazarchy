@@ -1,0 +1,96 @@
+#!/bin/bash
+#
+# Show, set, or step the focused monitor's scale.
+#
+# Unlike omarchy-hyprland-monitor-scaling, which persists every change into the
+# single omarchy_monitor_scale local (and so drags the laptop panel along when
+# an external monitor is scaled), this persists into the focused monitor's own
+# rule in ~/.config/hypr/monitors.lua. Monitors sitting at or right of the
+# resized one shift by the width change, so they neither overlap nor drift.
+#
+# All compositor changes go out in one ordered --batch and all file changes in
+# one sed invocation: piecemeal updates leave transient overlapping layouts
+# that Hyprland warns about.
+#
+# Usage: gazarchy-cmd-monitor-scale [up|down|SCALE]
+
+SCALES="1 1.25 1.6 2 3 4"
+LUA="$HOME/.config/hypr/monitors.lua"
+
+json=$(hyprctl monitors -j) || exit 1
+focused=$(jq -ce '.[] | select(.focused)' <<<"$json") || exit 1
+name=$(jq -r '.name' <<<"$focused")
+current=$(jq -r '.scale' <<<"$focused")
+
+case "${1:-}" in
+"")
+  echo "$current"
+  exit
+  ;;
+-h | --help)
+  echo "Usage: gazarchy-cmd-monitor-scale [up|down|SCALE]"
+  exit
+  ;;
+up | down)
+  target=$(awk -v current="$current" -v direction="$1" -v list="$SCALES" 'BEGIN {
+    n = split(list, scales, " ")
+    best = 1
+    for (i = 1; i <= n; i++)
+      if ((scales[i] - current)^2 < (scales[best] - current)^2) best = i
+    if (direction == "up" && best < n) best++
+    if (direction == "down" && best > 1) best--
+    print scales[best]
+  }')
+  ;;
+*)
+  target="$1"
+  ;;
+esac
+
+if ! [[ $target =~ ^[0-9]+([.][0-9]+)?$ ]]; then
+  echo "Usage: gazarchy-cmd-monitor-scale [up|down|SCALE]" >&2
+  exit 1
+fi
+
+mode() { jq -r '"\(.width)x\(.height)@\(.refreshRate | round)"' <<<"$1"; }
+
+# The focused monitor's logical width before and after, honoring rotation.
+read -r old_width new_width x y <<<"$(jq -r --argjson target "$target" '
+  (if .transform % 2 == 1 then .height else .width end) as $w |
+  "\($w / .scale | round) \($w / $target | round) \(.x) \(.y)"' <<<"$focused")"
+delta=$((new_width - old_width))
+
+seds=(-E -e "s|(output = \"$name\"[^}]*scale = )(\"[^\"]*\"\|[0-9.]+\|[A-Za-z_][A-Za-z0-9_]*)|\1$target|")
+scale_kw="keyword monitor $name,$(mode "$focused"),${x}x${y},$target"
+move_kws=()
+
+# Keep GTK's integer scale following the laptop panel.
+internal=$(jq -r '[.[] | select(.name | test("^(eDP|LVDS|DSI)-"))][0].name // ""' <<<"$json")
+if [[ $name == "$internal" ]]; then
+  gdk=$(awk -v s="$target" 'BEGIN { printf "%d", int(s + 0.5) }')
+  seds+=(-e "s|(hl\.env\(\"GDK_SCALE\", \")[0-9]+|\1$gdk|")
+fi
+
+# Monitors at or right of the old right edge shift by the width change.
+if ((delta != 0)); then
+  while read -r other; do
+    ox=$(jq -r '.x' <<<"$other")
+    ((ox >= x + old_width)) || continue
+    oname=$(jq -r '.name' <<<"$other")
+    opos="$((ox + delta))x$(jq -r '.y' <<<"$other")"
+    seds+=(-e "s|(output = \"$oname\"[^}]*position = \")[^\"]*|\1$opos|")
+    move_kws+=("keyword monitor $oname,$(mode "$other"),$opos,$(jq -r '.scale' <<<"$other")")
+  done < <(jq -c --arg n "$name" '.[] | select(.name != $n)' <<<"$json")
+fi
+
+# Growing: make room first. Shrinking: shrink first, then close the gap.
+if ((delta > 0)); then
+  batch=$(printf '%s;' "${move_kws[@]}" "$scale_kw")
+else
+  batch=$(printf '%s;' "$scale_kw" "${move_kws[@]}")
+fi
+hyprctl --batch "$batch" >/dev/null
+
+[[ -f $LUA ]] && sed -i "${seds[@]}" "$LUA"
+
+exit 0

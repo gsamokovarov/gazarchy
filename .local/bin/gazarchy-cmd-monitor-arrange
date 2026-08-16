@@ -3,27 +3,37 @@
 # Apply monitor positions and persist them to ~/.config/hypr/monitors.lua.
 # Used by the genadi.monitor shell panel's ARRANGEMENT section.
 #
+# All compositor changes go out in one --batch and all file changes in one sed
+# invocation: piecemeal updates leave transient overlapping layouts that
+# Hyprland warns about.
+#
 # Usage: gazarchy-cmd-monitor-arrange <name>@<XxY> [<name>@<XxY> ...]
 # Example: gazarchy-cmd-monitor-arrange eDP-1@0x900 DP-1@960x0
 
-MONITORS_LUA="$HOME/.config/hypr/monitors.lua"
+LUA="$HOME/.config/hypr/monitors.lua"
 
-monitors_json=$(hyprctl monitors -j) || exit 1
+json=$(hyprctl monitors -j) || exit 1
 
+kws=()
+seds=(-E)
 for spec in "$@"; do
   name="${spec%%@*}"
   pos="${spec#*@}"
   [[ $name && $pos =~ ^-?[0-9]+x-?[0-9]+$ ]] || continue
 
-  info=$(jq -ce --arg n "$name" '.[] | select(.name == $n)' <<<"$monitors_json") || continue
+  info=$(jq -ce --arg n "$name" '.[] | select(.name == $n)' <<<"$json") || continue
   mode=$(jq -r '"\(.width)x\(.height)@\(.refreshRate | round)"' <<<"$info")
   scale=$(jq -r '.scale' <<<"$info")
 
-  hyprctl keyword monitor "$name,$mode,$pos,$scale" >/dev/null
-
-  # Persist into the monitor's rule when it pins a quoted position. Writing the
-  # file makes Hyprland reload the config, which re-applies these same values.
-  if [[ -f $MONITORS_LUA ]]; then
-    sed -i -E "s|(hl\.monitor\(\{[^}]*output = \"$name\"[^}]*position = \")[^\"]*(\")|\1$pos\2|" "$MONITORS_LUA"
-  fi
+  kws+=("keyword monitor $name,$mode,$pos,$scale")
+  seds+=(-e "s|(output = \"$name\"[^}]*position = \")[^\"]*|\1$pos|")
 done
+
+((${#kws[@]})) || exit 0
+
+hyprctl --batch "$(printf '%s;' "${kws[@]}")" >/dev/null
+
+# Persisting makes Hyprland reload the config, re-applying these same values.
+[[ -f $LUA ]] && sed -i "${seds[@]}" "$LUA"
+
+exit 0

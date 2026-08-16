@@ -321,7 +321,7 @@ Panel {
   }
 
   function setScale(scale) {
-    actionProc.command = ["bash", "-c", "omarchy-hyprland-monitor-scaling " + scale]
+    actionProc.command = ["bash", "-c", "gazarchy-cmd-monitor-scale " + scale]
     if (!actionProc.running) actionProc.running = true
   }
 
