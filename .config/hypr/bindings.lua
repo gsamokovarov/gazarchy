@@ -31,3 +31,11 @@ o.bind("SUPER + B", "Browser", { omarchy = "browser" })
 -- Lock the computer with SUPER+CTRL+Q (also on the default SUPER+CTRL+L).
 hl.unbind("SUPER + CTRL + Q") -- was: Calculator (still on XF86Calculator)
 o.bind("SUPER + CTRL + Q", "Lock the computer", "omarchy-system-lock")
+
+-- Per-monitor scaling. Omarchy's script persists every change into one shared
+-- local, dragging the laptop panel's scale along whenever the external monitor
+-- is scaled; gazarchy-cmd-monitor-scale persists per rule and shifts neighbors.
+hl.unbind("SUPER + SLASH")
+hl.unbind("SUPER + ALT + SLASH")
+o.bind("SUPER + SLASH", "Monitor scaling up", "gazarchy-cmd-monitor-scale up")
+o.bind("SUPER + ALT + SLASH", "Monitor scaling down", "gazarchy-cmd-monitor-scale down")
