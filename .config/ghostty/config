@@ -18,5 +18,10 @@ shell-integration = none
 keybind = f11=toggle_fullscreen
 keybind = shift+enter=text:\x1b\r
 
+# Clipboard over primary selection, so Omarchy's universal copy/paste
+# (SUPER+C/V -> CTRL/SHIFT+Insert) reaches herdr and other TUIs
+keybind = shift+insert=paste_from_clipboard
+keybind = control+insert=copy_to_clipboard
+
 # Fix general slowness on hyprland (https://github.com/ghostty-org/ghostty/discussions/3224)
 async-backend = epoll
