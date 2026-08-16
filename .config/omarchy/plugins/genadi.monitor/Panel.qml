@@ -845,7 +845,11 @@ Panel {
 
             Grid {
               id: scaleRow
-              width: parent.width
+              // Inset by a pixel: flush at x=0 the first pill's 1px border
+              // lands on the ScrollView clip edge and vanishes under
+              // fractional monitor scales.
+              x: 1
+              width: parent.width - 2
               columns: root.scaleValues.length
               spacing: Style.spacing.xs
 
