@@ -4,6 +4,8 @@ import Quickshell
 import Quickshell.Io
 import qs.Ui
 import qs.Commons
+// Local copies of Ui primitives (BorderSurface fix) shadow the qs.Ui ones.
+import "."
 import "Model.js" as Model
 
 Panel {
@@ -604,11 +606,7 @@ Panel {
 
         Column {
           id: panelColumn
-          // Inset by a pixel per side: flush at x=0 a row's 1px border lands
-          // on the ScrollView clip edge and vanishes under fractional monitor
-          // scales (seen on the scale pills and the hovered slider rows).
-          x: 1
-          width: scrollArea.availableWidth - 2
+          width: scrollArea.availableWidth
           spacing: Style.space(14)
 
           // ---------- Hero: display icon · title/status ----------
