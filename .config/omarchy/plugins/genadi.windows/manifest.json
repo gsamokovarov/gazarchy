@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "genadi.windows",
+  "name": "Windows",
+  "version": "1.0.0",
+  "author": "Genadi Samokovarov",
+  "description": "Jump between open windows from a single bar icon",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "Windows",
+    "description": "Open-window switcher popup",
+    "category": "Compositor",
+    "allowMultiple": false,
+    "defaultSection": "left",
+    "defaults": {
+      "sortBy": "workspace",
+      "showTitles": true,
+      "icon": "\uf2d2"
+    },
+    "schema": [
+      {
+        "key": "sortBy",
+        "type": "enum",
+        "label": "Order",
+        "options": [
+          "workspace",
+          "recent"
+        ],
+        "defaultValue": "workspace",
+        "description": "Group windows under their workspace, or list them most-recently-focused first."
+      },
+      {
+        "key": "showTitles",
+        "type": "boolean",
+        "label": "Show window titles",
+        "defaultValue": true,
+        "description": "Print the window title under the application name."
+      },
+      {
+        "key": "icon",
+        "type": "string",
+        "label": "Bar glyph",
+        "defaultValue": "\uf2d2",
+        "description": "Nerd Font glyph drawn in the bar."
+      }
+    ]
+  }
+}
