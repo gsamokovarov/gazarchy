@@ -84,9 +84,6 @@ alias bo='bundle open'
 alias bi='bundle install'
 alias bam='bundle exec middleman'
 
-# Hivemind shortcuts
-alias hive=hivemind
-
 # YOLO!!!
 alias yolo="claude --dangerously-skip-permissions --chrome"
 
