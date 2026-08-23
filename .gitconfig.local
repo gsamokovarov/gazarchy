@@ -1,0 +1,15 @@
+# Gazarchy-managed git config. Pulled in by the [include] at the end of
+# ~/.gitconfig, which the .files repo owns. Keep machine and Omarchy specific
+# git settings here so the two repos never write the same file.
+
+# Authenticate GitHub over HTTPS through the gh CLI, which reads the token from
+# the gnome-keyring. Without a helper git reprompts on every fetch and push.
+#
+# The absolute /usr/bin/gh (pacman) is deliberate: `which gh` is a mise wrapper,
+# and git runs credential helpers in a stripped environment where mise
+# activation may not apply.
+[credential "https://github.com"]
+  helper = !/usr/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+  helper = !/usr/bin/gh auth git-credential
