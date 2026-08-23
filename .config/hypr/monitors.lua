@@ -7,4 +7,4 @@ hl.env("GDK_SCALE", "2")
 -- SUPER+/ and the Display panel persist per-monitor scales and positions here
 -- through gazarchy-cmd-monitor-scale and gazarchy-cmd-monitor-arrange.
 hl.monitor({ output = "eDP-1", mode = "preferred", position = "0x342", scale = 1.6 })
-hl.monitor({ output = "DP-1", mode = "preferred", position = "1200x0", scale = 1.5 })
+hl.monitor({ output = "DP-1", mode = "preferred", position = "1200x0", scale = 1.25 })
