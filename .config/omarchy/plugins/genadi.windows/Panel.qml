@@ -24,8 +24,7 @@ Panel {
 
   readonly property var rows: {
     var values = Hyprland.toplevels ? (Hyprland.toplevels.values || []) : []
-    var _ = root.activeAddress
-    return Model.rowsFor(values, root.mru, root.order)
+    return Model.rowsFor(values, root.order === "recent" ? root.mru : [], root.order)
   }
   readonly property int rowCount: rows.length
 

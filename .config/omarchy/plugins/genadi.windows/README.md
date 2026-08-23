@@ -84,10 +84,26 @@ o.bind("SUPER + W", "Window switcher", "omarchy-shell shell toggle genadi.window
 - Rows are anchor-laid-out rather than using QtQuick.Layouts: a `RowLayout`
   inside the row surface feeds its content height back into the surface that
   sizes it, which Qt reports as a `polish()` loop.
-- `rows` is rebuilt on window open/close and on focus changes. A window
-  changing workspace while the popup is up will not re-sort until it
-  reopens — the popup holds keyboard focus, so nothing can move a window
-  out from under it.
+- `rows` is a binding over `Hyprland.toplevels`. QML captures property
+  reads through the call into `Model.js`, so it already tracks every
+  window's workspace, class, and address without naming them — a window
+  moved to another workspace re-sorts on its own.
+- That capture is also why the MRU is read **only** in `recent` order:
+  `root.order === "recent" ? root.mru : []`. The MRU changes on every
+  focus change, and in `workspace` order it cannot affect the sort, so
+  reading it unconditionally rebuilt every row on every alt-tab — on
+  every monitor's bar, popup open or not, each row re-running the
+  desktop-entry cascade over the whole `DesktopEntries` list. A
+  conditional read registers no dependency while the branch is not
+  taken, and reconnects when `sortBy` flips. The focused row does not
+  need this rebuild either: `isActive` binds `toplevel.activated`
+  directly.
+- `workspaceSortKey` sorts in tiers — numbered workspaces by id, then
+  specials at `SPECIAL_SORT_BASE - id` (their ids are negative), then
+  unknown, then unassigned. The tier bases are deliberately small: an
+  earlier version offset from `Number.MAX_SAFE_INTEGER`, which pushed
+  specials past 2^53 where doubles step by 2, so workspaces -98 and -99
+  produced the same key and could not be ordered.
 
 ## Hacking on it
 
@@ -107,8 +123,8 @@ recompiling the QML. After editing `Panel.qml` or `Model.js`:
 omarchy restart shell
 ```
 
-`Model.js` is plain functions with no QML dependencies, so it can be checked
-without the shell at all:
+`Model.js` is plain functions and constants with no QML dependencies, so it
+can be checked without the shell at all:
 
 ```bash
 node -e 'eval(require("fs").readFileSync("Model.js","utf8")); console.log(prettyAppId("chrome-web.whatsapp.com__-Default"))'

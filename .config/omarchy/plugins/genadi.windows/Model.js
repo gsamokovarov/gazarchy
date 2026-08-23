@@ -1,3 +1,7 @@
+var SPECIAL_SORT_BASE = 1e9
+var UNKNOWN_SORT_KEY = 2e9
+var UNASSIGNED_SORT_KEY = 3e9
+
 function appIdOf(toplevel) {
   if (!toplevel) return ""
   var ipc = toplevel.lastIpcObject || {}
@@ -60,10 +64,10 @@ function workspaceBadge(toplevel) {
 
 function workspaceSortKey(toplevel) {
   var ws = toplevel ? toplevel.workspace : null
-  if (!ws) return Number.MAX_SAFE_INTEGER
+  if (!ws) return UNASSIGNED_SORT_KEY
   var id = Number(ws.id)
-  if (!isFinite(id)) return Number.MAX_SAFE_INTEGER - 1
-  return id > 0 ? id : Number.MAX_SAFE_INTEGER - 2 - id
+  if (!isFinite(id)) return UNKNOWN_SORT_KEY
+  return id > 0 ? id : SPECIAL_SORT_BASE - id
 }
 
 function rowsFor(toplevels, mru, order) {
