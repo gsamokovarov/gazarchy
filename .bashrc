@@ -87,8 +87,15 @@ alias bam='bundle exec middleman'
 # YOLO!!!
 alias yolo="claude --dangerously-skip-permissions --chrome"
 
-# YO!!!
-alias yo="claude --dangerously-skip-permissions --chrome"
+# YOLO mode for Claude Code and Codex. `yo fable`, `yo [have no] sol`
+yo() {
+  case "$1" in
+    astra) shift; codex --dangerously-bypass-approvals-and-sandbox --model gpt-6-astra "$@" ;;
+    sol) shift; codex --dangerously-bypass-approvals-and-sandbox --model gpt-6.1-sol "$@" ;;
+    opus|fable|sonnet|haiku) local model=$1; shift; yolo --model "$model" "$@" ;;
+    *) yolo "$@" ;;
+  esac
+}
 
 # Cycle through a list of themes, setting the next one after current.
 next-theme() {
