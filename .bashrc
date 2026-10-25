@@ -29,6 +29,8 @@ git() {
 # I'm a jump guy, no zoxide pls.
 unalias cd
 
+alias open=xdg-open
+
 # Rage quit everywhere.
 alias Q=exit
 
