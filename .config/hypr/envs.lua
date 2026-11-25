@@ -10,3 +10,7 @@ if not (":" .. path .. ":"):find(":" .. omarchy_bin .. ":", 1, true) then
   path = omarchy_bin .. ":" .. path
 end
 hl.env("PATH", path .. ":" .. (os.getenv("HOME") or "") .. "/bin")
+
+-- Smaller pointer (Omarchy default is 24, which looks big at 1.25 scale).
+hl.env("XCURSOR_SIZE", "20")
+hl.env("HYPRCURSOR_SIZE", "20")
